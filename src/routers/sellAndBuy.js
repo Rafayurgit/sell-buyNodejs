@@ -41,6 +41,21 @@ sellAndBuyRouter.get("/sellProduct", async(req, res)=>{
     }
 })
 
+sellAndBuyRouter.post("/sellProduct", async(req, res)=>{
+    try{
+        if(req.body.productName.length < 4){
+            return res.send(400).json({error: "product name should have minimum of four characters"})
+        }else if(req.body.costPrice <=0 ){
+            return res.send(400).json({error: "cost price value cannot be zero or negative value"})
+        }
+        const data = new sellBuy({productName: req.body.productName, costPrice: req.body.costPrice})
+        await data.save();
+        res.status(201).json({message: "Product Added"})
+
+    }catch(error){
+        res.status(400).json({error: error.message})
+    }
+})
 
 
 // exporting the router
