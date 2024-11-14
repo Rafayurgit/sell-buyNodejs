@@ -57,6 +57,23 @@ sellAndBuyRouter.post("/sellProduct", async(req, res)=>{
     }
 })
 
+sellAndBuyRouter.patch("/sellProduct:id", async(req, res)=>{
+    try {
+        const id= req.param._id;
+        const soldPrice= req.body;
+        if(soldPrice<1){
+            return res.status(400).json("sold price value cannot be zero or negative value")
+        }
+        const data = await sellBuy.findByIdAndUpdate(id, {soldPrice}, {new:true, runValidators:true})
+        if(!data){
+            res.status(400).json({error: "Product not found"})
+        }
+        return res.status(200).json({message: "Updated Successfully", data:data});
+    } catch (error) {
+        res.status(400).json({error: error.message})
+    }
+
+})
 
 // exporting the router
 
