@@ -59,7 +59,7 @@ sellAndBuyRouter.post("/sellProduct", async(req, res)=>{
 
 sellAndBuyRouter.patch("/sellProduct:id", async(req, res)=>{
     try {
-        const id= req.param._id;
+        const id= req.param;
         const soldPrice= req.body;
         if(soldPrice<1){
             return res.status(400).json("sold price value cannot be zero or negative value")
@@ -73,6 +73,19 @@ sellAndBuyRouter.patch("/sellProduct:id", async(req, res)=>{
         res.status(400).json({error: error.message})
     }
 
+})
+
+sellAndBuyRouter.delete("/sellProduct:id", async(req, res)=>{
+    try {
+        const id = req.param;
+        const data= await sellBuy.findByIdAndDelete(id)
+        if(!data){
+            return res.status(400).json({message:"product not found"})
+        }
+        res.status(200).json({message:"Deleted successfully"})
+    } catch (error) {
+        res.status(400).json({error:error.message})
+    }
 })
 
 // exporting the router
